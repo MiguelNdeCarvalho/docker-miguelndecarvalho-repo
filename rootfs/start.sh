@@ -26,3 +26,12 @@ runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz"
 
 # Update the Cache
 pacman -Syyu
+
+# Add packages from the envs
+for package in $(echo "$PACKAGES" | tr "," " "); do
+	echo "Adding ${package} to the repo"
+	runuser -l abc -c 'cd / && aur sync --no-view --noconfirm \
+		-d ${REPO_NAME} \
+		-r repo \
+		${package}'
+done
