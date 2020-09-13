@@ -22,4 +22,4 @@ Server = file:///repo
 EOF
 
 # Start the repo
-runuser -l abc -c 'repo-add /repo/${REPO_NAME}.db.tar.xz'
+runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz"
