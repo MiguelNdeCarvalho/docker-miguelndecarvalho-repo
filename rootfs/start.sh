@@ -8,11 +8,7 @@ PGID=${PGID:-1001}
 # Change UID and GID for user
 groupmod -o -g "$PGID" abc &> /dev/null
 usermod -o -u "$PUID" abc &> /dev/null
-
-# Create repo and chown it
-mkdir /repo
 chown abc:abc /home/abc
-chown abc:abc /repo
 
 # Add repo to pacman.conf
 cat <<EOF >> /etc/pacman.conf
@@ -21,17 +17,31 @@ SigLevel = Optional TrustAll
 Server = file:///repo
 EOF
 
-# Start the repo
-runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz"
+# Create repo and chown it
+if [ -d "/repo" ];then #Check if repo already exists
+	chown abc:abc /repo
+	if [ -f "/repo/${REPO_NAME}.db.tar.xz" ];then
+		echo -e "\e[33m Repo already exists!\e[39m"
+	else # Start the repo
+		runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
+		echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
+	fi
+else
+	mkdir /repo
+	chown abc:abc /repo
+	runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
+	echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
+fi
 
 # Update the Cache
-pacman -Syyu
+pacman -Syu &> /dev/null
 
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
-	echo "Adding ${package} to the repo"
+	echo -e "\e[34m Adding ${package} to the repo!\e[39m"
 	runuser -l abc -c "aur sync --no-view --noconfirm \
 		-d ${REPO_NAME} \
 		-r /repo \
-		${package}"
+		${package} &> /dev/null"
+	echo -e "\e[32m Sucessfully added ${package} to the repo!\e[39m"
 done
