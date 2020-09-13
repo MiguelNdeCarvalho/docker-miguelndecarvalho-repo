@@ -30,8 +30,8 @@ pacman -Syyu
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
 	echo "Adding ${package} to the repo"
-	runuser -l abc -c 'cd / && aur sync --no-view --noconfirm \
+	runuser -l abc -c "aur sync --no-view --noconfirm \
 		-d ${REPO_NAME} \
-		-r repo \
-		${package}'
+		-r /repo \
+		${package}"
 done
