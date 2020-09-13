@@ -18,7 +18,7 @@ chown abc:abc /repo
 cat <<EOF >> /etc/pacman.conf
 [${REPO_NAME}]
 SigLevel = Optional TrustAll
-Server = Server = file:///repo
+Server = file:///repo
 EOF
 
 # Start the repo
