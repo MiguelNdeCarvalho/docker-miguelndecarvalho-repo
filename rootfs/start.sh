@@ -6,8 +6,8 @@ PUID=${PUID:-1001}
 PGID=${PGID:-1001}
 
 # Change UID and GID for user
-groupmod -o -g "$PGID" abc
-usermod -o -u "$PUID" abc
+groupmod -o -g "$PGID" abc &> /dev/null
+usermod -o -u "$PUID" abc &> /dev/null
 
 # Create repo and chown it
 mkdir /repo
