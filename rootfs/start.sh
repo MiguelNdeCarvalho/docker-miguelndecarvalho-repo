@@ -52,6 +52,8 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			${package} &> /dev/null"
 		if [ $? == '1' ];then
 			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
+		elif [ $? == '8' ];then
+			echo -e "\e[31mPacman failed to install missing dependencies while building ${package}.\e[39m"
 		else
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
