@@ -42,7 +42,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		echo -e "\e[33m${package} is already on the repo!\e[39m"
 	elif [ $package == 'spotify' ];then
 		echo -e "\e[33m${package} package detected, adding GPG key needed for the build!\e[39m"
-		run user -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
+		runuser -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
 		
 		echo -e "\e[34mAdding ${package} to the repo!\e[39m"
 		BUILD_START=$(date +%s)
