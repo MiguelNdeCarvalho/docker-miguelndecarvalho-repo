@@ -50,6 +50,9 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 	fi
 done
 
+# Setup Time
+ln -sf /usr/share/zoneinfo/$TZ /etc/localtime
+
 # Add Cronjob
 echo "${CRON} /bin/bash /update.sh &> /dev/null" > /var/spool/cron/abc
 
