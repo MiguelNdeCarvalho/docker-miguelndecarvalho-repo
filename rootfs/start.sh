@@ -54,7 +54,7 @@ done
 ln -sf /usr/share/zoneinfo/$TZ /etc/localtime
 
 # Add Cronjob
-echo "${CRON} /bin/bash /update.sh &> /dev/null" > /var/spool/cron/abc
+echo "${CRON} /bin/bash /update.sh" > /var/spool/cron/abc
 
 # Execute Cronjob
 /usr/sbin/crond -x ext &> /dev/null
