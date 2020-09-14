@@ -46,7 +46,11 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			-d ${REPO_NAME} \
 			-r /repo \
 			${package} &> /dev/null"
-		echo -e "\e[32m Sucessfully added ${package} to the repo!\e[39m"
+		if [ $? == '1' ];then
+			echo -e "\e[31mSomething went wrong during the build of the package!\e[31m"	
+		else
+			echo -e "\e[32m Sucessfully built ${package}!\e[39m"
+		fi
 	fi
 done
 
