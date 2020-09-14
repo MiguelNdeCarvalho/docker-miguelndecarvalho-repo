@@ -39,7 +39,7 @@ pacman -Syu &> /dev/null
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
 	if [ -f /repo/${package}* ];then
-		echo -e "\e[33m ${package} is already on the repo!"
+		echo -e "\e[33m ${package} is already on the repo!\e[39m"
 	else
 		echo -e "\e[34m Adding ${package} to the repo!\e[39m"
 		runuser -l abc -c "aur sync --no-view --noconfirm \
