@@ -18,9 +18,9 @@ Server = file:///repo
 EOF
 
 # Create repo and chown it
-if [ -d "/repo" ];then #Check if repo already exists
+if [ -d /repo ];then #Check if repo already exists
 	chown abc:abc /repo
-	if [ -f "/repo/${REPO_NAME}.db.tar.xz" ];then
+	if [ -f /repo/${REPO_NAME}.db.tar.xz ];then
 		echo -e "\e[33m Repo already exists!\e[39m"
 	else # Start the repo
 		runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
@@ -38,7 +38,7 @@ pacman -Syu &> /dev/null
 
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
-	if [ -f "/repo/${package}*" ];then
+	if [ -f /repo/${package}* ];then
 		echo -e "\e[33m ${package} is already on the repo!"
 	else
 		echo -e "\e[34m Adding ${package} to the repo!\e[39m"
