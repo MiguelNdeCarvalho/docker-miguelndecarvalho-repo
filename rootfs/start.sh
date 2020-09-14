@@ -52,7 +52,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		else
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
-			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.!\e[39m"
+			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
 		fi
 	fi
 done
