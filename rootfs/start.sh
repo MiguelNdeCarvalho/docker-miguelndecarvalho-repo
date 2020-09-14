@@ -48,7 +48,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			-r /repo \
 			${package} &> /dev/null"
 		if [ $? == '1' ];then
-			echo -e "\e[31mSomething went wrong during the build of the package!\e[39m"	
+			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
 		else
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
