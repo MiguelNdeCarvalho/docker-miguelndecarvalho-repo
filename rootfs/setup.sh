@@ -7,7 +7,8 @@ set -e
 pacman -Syu --noconfirm --needed \
 	base-devel \
 	git \
-	devtools
+	devtools \
+	cronie
 
 # Create ABC User and add it to Sudoers
 mkdir /home/abc

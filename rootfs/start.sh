@@ -49,3 +49,9 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		echo -e "\e[32m Sucessfully added ${package} to the repo!\e[39m"
 	fi
 done
+
+# Add Cronjob
+echo "${CRON} /bin/bash /update.sh &> /dev/null" > /var/spool/cron/abc
+
+# Execute Cronjob
+/usr/sbin/crond -x ext &> /dev/null
