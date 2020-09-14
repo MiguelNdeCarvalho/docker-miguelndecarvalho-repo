@@ -40,6 +40,23 @@ pacman -Syu &> /dev/null
 for package in $(echo "$PACKAGES" | tr "," " "); do
 	if [ -f /repo/${package}* ];then
 		echo -e "\e[33m${package} is already on the repo!\e[39m"
+	elif [ $package == 'spotify' ];then
+		echo -e "\e[33m${package} package detected, adding GPG key needed for the build!\e[39m"
+		run user -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
+		
+		echo -e "\e[34mAdding ${package} to the repo!\e[39m"
+		BUILD_START=$(date +%s)
+		runuser -l abc -c "aur sync --no-view --noconfirm \
+			-d ${REPO_NAME} \
+			-r /repo \
+			${package} &> /dev/null"
+		if [ $? == '1' ];then
+			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
+		else
+			BUILD_END=$(date +%s)
+			DIFF=$(($BUILD_END - $BUILD_START))
+			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
+		fi
 	else
 		echo -e "\e[34mAdding ${package} to the repo!\e[39m"
 		BUILD_START=$(date +%s)
