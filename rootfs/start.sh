@@ -42,6 +42,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		echo -e "\e[33m ${package} is already on the repo!\e[39m"
 	else
 		echo -e "\e[34m Adding ${package} to the repo!\e[39m"
+		BUILD_START=$(date +%s)
 		runuser -l abc -c "aur sync --no-view --noconfirm \
 			-d ${REPO_NAME} \
 			-r /repo \
@@ -49,7 +50,9 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		if [ $? == '1' ];then
 			echo -e "\e[31mSomething went wrong during the build of the package!\e[31m"	
 		else
-			echo -e "\e[32m Sucessfully built ${package}!\e[39m"
+			BUILD_END=$(date +%s)
+			DIFF=$(($BUILD_END - $BUILD_START))
+			echo -e "\e[32m Sucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.!\e[39m"
 		fi
 	fi
 done
