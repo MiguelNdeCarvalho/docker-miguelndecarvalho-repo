@@ -21,7 +21,7 @@ EOF
 if [ -d /repo ];then #Check if repo already exists
 	chown abc:abc /repo
 	if [ -f /repo/${REPO_NAME}.db.tar.xz ];then
-		echo -e "\e[33m Repo already exists!\e[39m"
+		echo -e "\e[33mRepo already exists!\e[39m"
 	else # Start the repo
 		runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
 		echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
@@ -39,9 +39,9 @@ pacman -Syu &> /dev/null
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
 	if [ -f /repo/${package}* ];then
-		echo -e "\e[33m ${package} is already on the repo!\e[39m"
+		echo -e "\e[33m${package} is already on the repo!\e[39m"
 	else
-		echo -e "\e[34m Adding ${package} to the repo!\e[39m"
+		echo -e "\e[34mAdding ${package} to the repo!\e[39m"
 		BUILD_START=$(date +%s)
 		runuser -l abc -c "aur sync --no-view --noconfirm \
 			-d ${REPO_NAME} \
@@ -52,7 +52,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 		else
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
-			echo -e "\e[32m Sucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.!\e[39m"
+			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.!\e[39m"
 		fi
 	fi
 done
