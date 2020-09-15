@@ -20,7 +20,7 @@ EOF
 # Create repo and chown it
 if [ -d /repo ];then #Check if repo already exists
 	chown abc:abc /repo
-	if [ -f /repo/${REPO_NAME}.db.tar.xz ];then
+	if [ -f /repo/"${REPO_NAME}".db.tar.xz ];then
 		echo -e "\e[33mRepo already exists!\e[39m"
 	else # Start the repo
 		runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
@@ -38,9 +38,9 @@ pacman -Syu &> /dev/null
 
 # Add packages from the envs
 for package in $(echo "$PACKAGES" | tr "," " "); do
-	if [ -f /repo/${package}* ];then
+	if [ -f /repo/"${package}"* ];then
 		echo -e "\e[33m${package} is already on the repo!\e[39m"
-	elif [ $package == 'spotify' ];then
+	elif [ "$package" == 'spotify' ];then
 		echo -e "\e[33m${package} package detected, adding GPG key needed for the build!\e[39m"
 		runuser -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
 		
@@ -77,7 +77,7 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 done
 
 # Setup Time
-ln -sf /usr/share/zoneinfo/$TZ /etc/localtime
+ln -sf /usr/share/zoneinfo/"$TZ" /etc/localtime
 
 # Add Cronjob
 echo "${CRON} /bin/bash /update.sh" > /var/spool/cron/abc
