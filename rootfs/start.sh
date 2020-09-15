@@ -50,14 +50,12 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			-d ${REPO_NAME} \
 			-r /repo \
 			${package} &> /dev/null"
-		if [ $? == '1' ];then
-			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
-		elif [ $? == '8' ];then
-			echo -e "\e[31mPacman failed to install missing dependencies while building ${package}.\e[39m"
-		else
+		if [ $? == '0' ];then
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
 			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
+		else
+			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
 		fi
 	else
 		echo -e "\e[34mAdding ${package} to the repo!\e[39m"
@@ -66,12 +64,12 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			-d ${REPO_NAME} \
 			-r /repo \
 			${package} &> /dev/null"
-		if [ $? == '1' ];then
-			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
-		else
+		if [ $? == '0' ];then
 			BUILD_END=$(date +%s)
 			DIFF=$(($BUILD_END - $BUILD_START))
 			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
+		else
+			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
 		fi
 	fi
 done
