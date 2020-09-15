@@ -52,8 +52,8 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			${package} &> /dev/null"
 		if [ $? == '0' ];then
 			BUILD_END=$(date +%s)
-			DIFF=$(($BUILD_END - $BUILD_START))
-			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
+			DIFF=$((BUILD_END - BUILD_START))
+			echo -e "\e[32mSucessfully built ${package} in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds.\e[39m"
 		else
 			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
 		fi
@@ -66,8 +66,8 @@ for package in $(echo "$PACKAGES" | tr "," " "); do
 			${package} &> /dev/null"
 		if [ $? == '0' ];then
 			BUILD_END=$(date +%s)
-			DIFF=$(($BUILD_END - $BUILD_START))
-			echo -e "\e[32mSucessfully built ${package} in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.\e[39m"
+			DIFF=$((BUILD_END - BUILD_START))
+			echo -e "\e[32mSucessfully built ${package} in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds.\e[39m"
 		else
 			echo -e "\e[31mSomething went wrong during the build of ${package}!\e[39m"
 		fi
