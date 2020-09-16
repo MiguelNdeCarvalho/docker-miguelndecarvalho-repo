@@ -52,12 +52,12 @@ build ()
 		-d ${REPO_NAME} \
 		-r /repo \
 		${1} &> /dev/null"
-	if [ $? == '0' ];then
+	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r /repo ${1} &> /dev/null";then
+		echo -e "\e[31mSomething went wrong during the build of ${1}!\e[39m"
+	else
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
 		echo -e "\e[32mSucessfully built ${1} in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds.\e[39m"
-	else
-		echo -e "\e[31mSomething went wrong during the build of ${1}!\e[39m"
 	fi
 }
 
