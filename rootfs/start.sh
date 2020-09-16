@@ -46,11 +46,10 @@ EOF
 
 send_notification ()
 {
-	curl \
-	— data parse_mode=HTML \
-	— data chat_id="$TG_ID" \
-	— data text="<b>$REPO_NAME</b>%0A$1" \
-	— request POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage
+	curl -s -X POST https://api.telegram.org/bot$TG_TOKEN/sendMessage \
+	-d parse_mode=HTML  \
+	-d chat_id=$TG_ID \
+	-d text="<b>$REPO_NAME</b>%0A$1"
 }
 
 build ()
@@ -63,7 +62,7 @@ build ()
 		${1} &> /dev/null"
 	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r /repo ${1} &> /dev/null";then
 		echo -e "\e[31mSomething went wrong during the build of ${1}!\e[39m"
-		send_notification "build failed for $1"
+		send_notification "Build failed for $1"
 	else
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
