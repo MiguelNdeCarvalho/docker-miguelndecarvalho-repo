@@ -63,7 +63,7 @@ build ()
 
 package_exists ()
 {
-	for f in /home/mike/Documents/Projects/bash_test/"$1"*; do
+	for f in /repo/"$1"*; do
 		if [ -e "$f" ];then 
 			return 0
 		else
