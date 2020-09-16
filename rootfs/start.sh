@@ -61,11 +61,23 @@ build ()
 	fi
 }
 
+package_exists ()
+{
+	for f in /home/mike/Documents/Projects/bash_test/"$1"*; do
+		if [ -e "$f" ];then 
+			return 0
+		else
+			return 1
+		fi
+		break
+	done
+}
+
 add_packages ()
 {
 	# Add packages from the envs
 	for package in $(echo "$PACKAGES" | tr "," " "); do
-		if [ -f /repo/"${package}"* ];then
+		if package_exists "$package";then
 			echo -e "\e[33m${package} is already on the repo!\e[39m"
 		elif [ "$package" == 'spotify' ];then
 			echo -e "\e[33m${package} package detected, adding GPG key needed for the build!\e[39m"
