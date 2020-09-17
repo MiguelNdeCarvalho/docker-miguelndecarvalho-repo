@@ -101,6 +101,7 @@ main ()
 	add_packages
 	
 	# Execute Cronjob
+	echo -e "Cron started."
 	/usr/sbin/crond -x ext &> /dev/null
 }
 
