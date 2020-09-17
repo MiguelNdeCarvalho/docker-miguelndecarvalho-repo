@@ -12,11 +12,9 @@ setup ()
 	chown abc:abc /home/abc
 
 	# Add repo to pacman.conf
-	cat <<EOF >> /etc/pacman.conf
-	[${REPO_NAME}]
-	SigLevel = Optional TrustAll
-	Server = file:///repo
-EOF
+	if ! grep -q "$REPO_NAME" "/etc/pacman.conf"; then
+		echo -e "[$REPO_NAME]\nSigLevel = Optional TrustAll\nServer = file:///repo" >> /etc/pacman.conf	
+	fi
 
 	# Create repo and chown it
 	if [ -d /repo ];then #Check if repo already exists
