@@ -87,7 +87,6 @@ add_packages ()
 		if package_exists "$package";then
 			echo -e "\e[33m${package} is already on the repo!\e[39m"
 		elif [ "$package" == 'spotify' ];then
-			echo -e "\e[33m${package} package detected, adding GPG key needed for the build!\e[39m"
 			runuser -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
 			build "$package"
 		else
