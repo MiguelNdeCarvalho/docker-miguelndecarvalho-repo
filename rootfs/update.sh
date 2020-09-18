@@ -24,7 +24,8 @@ build ()
 	if [ "$EXIT_CODE" == '0' ];then
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
-		send_notification "Repo has been updated%0AIt took $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds."
+		PACKAGES_UPDATED=`grep "==> Adding package" /tmp/update | grep -Eo "'.*'" | sed "s/'//g" | sed "s/.pkg.tar.zst//g" | sed "s/-[0-9].*//g"`
+		send_notification "Repo has been updated%0APackages Updated:$PACKAGES_UPDATED%0AIt took $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds."
 	elif [ "$EXIT_CODE" == '123' ];then
 		send_notification "Repo has no updates available!" 
 	else
