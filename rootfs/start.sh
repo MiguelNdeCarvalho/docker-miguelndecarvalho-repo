@@ -19,9 +19,7 @@ setup ()
 	# Create repo and chown it
 	if [ -d /repo ];then #Check if repo already exists
 		chown abc:abc /repo
-		if [ -f /repo/"${REPO_NAME}".db.tar.xz ];then
-			echo -e "\e[33mRepo already exists!\e[39m"
-		else # Start the repo
+		if [ ! -f /repo/"${REPO_NAME}".db.tar.xz ];then
 			runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
 			echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
 		fi
