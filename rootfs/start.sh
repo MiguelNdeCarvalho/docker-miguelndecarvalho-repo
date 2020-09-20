@@ -36,6 +36,12 @@ setup ()
 	# Setup Time
 	ln -sf /usr/share/zoneinfo/"$TZ" /etc/localtime
 
+	# Add .env file
+	if [ ! -f /home/abc/.env ]; then
+    	echo -e "export REPO_NAME=$REPO_NAME\nexport TG_TOKEN=$TG_TOKEN\nexport TG_ID=$TG_ID" > /home/abc/.env
+		chown abc:abc /home/abc/.env
+	fi
+
 	# Add Cronjob
 	echo "${CRON} source /home/abc/.env && /update.sh >> /home/abc/cron_repo 2>&1" > /var/spool/cron/abc
 }
