@@ -37,7 +37,7 @@ setup ()
 	ln -sf /usr/share/zoneinfo/"$TZ" /etc/localtime
 
 	# Add Cronjob
-	echo "${CRON} /bin/bash /update.sh > /home/abc/cron_repo" > /var/spool/cron/abc
+	echo "${CRON} /bin/bash /update.sh >> /home/abc/cron_repo" > /var/spool/cron/abc
 }
 
 send_notification ()
