@@ -42,6 +42,16 @@ setup ()
 		chown abc:abc /home/abc/.env
 	fi
 
+	# Create alias
+	if [ ! -f /usr/bin/update ];then
+		echo -e '#!/bin/bash\nrunuser -l abc -c "/update.sh"' > /usr/bin/update
+		chmod +x /usr/bin/update
+	fi
+	if [ ! -f /usr/bin/rm ];then
+		echo -e '#!/bin/bash\nrunuser -l abc -c "/remove.sh $1"' > /usr/bin/rm
+		chmod +x /usr/bin/rm
+	fi
+
 	# Add Cronjob
 	echo "${CRON} source /home/abc/.env && /update.sh >> /home/abc/cron_repo 2>&1" > /var/spool/cron/abc
 }
