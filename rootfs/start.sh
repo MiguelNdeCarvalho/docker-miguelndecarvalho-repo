@@ -117,8 +117,8 @@ add_packages ()
 main ()
 {
 	setup
-	add_packages
 	add_keys
+	add_packages
 	
 	# Execute Cronjob
 	echo -e "Cron started."
