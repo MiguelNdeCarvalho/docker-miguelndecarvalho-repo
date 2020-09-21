@@ -13,6 +13,12 @@ send_notification ()
 	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
 }
 
+update_system ()
+{
+	print_time "Performing a system update"
+	sudo pacman -Syu --noconfirm &> /dev/null
+}
+
 build ()
 {
 	BUILD_START=$(date +%s)
@@ -36,6 +42,7 @@ build ()
 main ()
 {
 	print_time "Starting repo update process"
+	update_system
 	build
 	print_time "Finished repo update process"
 }
