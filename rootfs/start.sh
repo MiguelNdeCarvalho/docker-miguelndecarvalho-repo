@@ -94,15 +94,19 @@ package_exists ()
 	done
 }
 
+add_keys ()
+{
+	for key in $(echo "$KEYS" | tr "," " "); do
+		gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $key &> /dev/null
+	done
+}
+
 add_packages ()
 {
 	# Add packages from the envs
 	for package in $(echo "$PACKAGES" | tr "," " "); do
 		if package_exists "$package";then
 			echo -e "\e[33m${package} is already on the repo!\e[39m"
-		elif [ "$package" == 'spotify' ];then
-			runuser -l abc -c "curl -sS https://download.spotify.com/debian/pubkey.gpg | gpg --import -" &> /dev/null
-			build "$package"
 		else
 			build "$package"
 		fi
@@ -113,6 +117,7 @@ main ()
 {
 	setup
 	add_packages
+	add_keys
 	
 	# Execute Cronjob
 	echo -e "Cron started."
