@@ -98,7 +98,7 @@ package_exists ()
 add_keys ()
 {
 	for key in $(echo "$KEYS" | tr "," " "); do
-		gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $key &> /dev/null
+		runuser -l abc -c "gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $key &> /dev/null"
 	done
 }
 
