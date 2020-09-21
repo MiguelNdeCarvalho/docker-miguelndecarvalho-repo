@@ -27,6 +27,7 @@ setup ()
 		mkdir /repo
 		chown abc:abc /repo
 		runuser -l abc -c "repo-add /repo/${REPO_NAME}.db.tar.xz &> /dev/null"
+		tar -xf /app/nginx.tar.gz -C /repo
 		echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
 	fi
 
@@ -44,16 +45,16 @@ setup ()
 
 	# Create alias
 	if [ ! -f /usr/bin/update ];then
-		echo -e '#!/bin/bash\nrunuser -l abc -c "/update.sh"' > /usr/bin/update
+		echo -e '#!/bin/bash\nrunuser -l abc -c "/app/update.sh"' > /usr/bin/update
 		chmod +x /usr/bin/update
 	fi
 	if [ ! -f /usr/bin/rm ];then
-		echo -e '#!/bin/bash\nrunuser -l abc -c "/remove.sh $1"' > /usr/bin/rm
+		echo -e '#!/bin/bash\nrunuser -l abc -c "/app/remove.sh $1"' > /usr/bin/rm
 		chmod +x /usr/bin/rm
 	fi
 
 	# Add Cronjob
-	echo "${CRON} source /home/abc/.env && /update.sh >> /home/abc/cron_repo 2>&1" > /var/spool/cron/abc
+	echo "${CRON} source /home/abc/.env && /app/update.sh >> /home/abc/cron_repo 2>&1" > /var/spool/cron/abc
 }
 
 send_notification ()
