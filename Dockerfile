@@ -1,4 +1,4 @@
-FROM archlinux/base
+FROM archlinux:20200908
 
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
