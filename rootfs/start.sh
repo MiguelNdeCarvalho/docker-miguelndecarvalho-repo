@@ -62,7 +62,7 @@ send_notification ()
 	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
 	-d parse_mode=HTML  \
 	-d chat_id="$TG_ID" \
-	-d text="<b>$REPO_NAME</b>%0A$1"
+	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
 }
 
 build ()
