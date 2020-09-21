@@ -30,8 +30,8 @@ setup ()
 		echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
 	fi
 
-	# Update the Cache
-	pacman -Syu &> /dev/null
+	# Update the System
+	pacman -Syu --noconfirm &> /dev/null
 
 	# Setup Time
 	ln -sf /usr/share/zoneinfo/"$TZ" /etc/localtime
