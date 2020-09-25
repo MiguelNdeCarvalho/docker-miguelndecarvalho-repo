@@ -33,7 +33,7 @@ build ()
 		PACKAGES_UPDATED=$(grep "==> Adding package" /tmp/update | grep -Eo "'.*'" | sed "s/'//g" | sed "s/.pkg.tar.zst//g" | sed "s/-[0-9].*//g")
 		send_notification "Repo has been updated%0APackages Updated:$PACKAGES_UPDATED%0AIt took $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds."
 	elif [ "$EXIT_CODE" == '123' ];then
-		send_notification "Repo has no updates available!" 
+		return 123 
 	else
 		send_notification "Something went wrong during the update of the repo!"
 	fi
