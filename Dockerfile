@@ -15,7 +15,9 @@ RUN pacman -Syu --noconfirm --needed \
     runuser -l abc -c 'pacman-key --export DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A | gpg --import' && \
     runuser -l abc -c 'cd /home/abc/aurutils/ && makepkg --noconfirm -sci && rm -rf /home/abc/aurutils/' && \
     pacman -Sc --noconfirm && \
-    mkdir /app
+    mkdir /app && \
+    wget https://github.com/matthewpi/privatebin/releases/download/v0.0.1/privatebin -P /app/ && \
+    chmod +x /app/privatebin \
 
 COPY rootfs /app
 
