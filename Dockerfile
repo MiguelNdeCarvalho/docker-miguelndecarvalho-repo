@@ -17,7 +17,7 @@ RUN pacman -Syu --noconfirm --needed \
     pacman -Sc --noconfirm && \
     mkdir /app && \
     wget https://github.com/matthewpi/privatebin/releases/download/v0.0.1/privatebin -P /app/ && \
-    chmod +x /app/privatebin \
+    chmod +x /app/privatebin
 
 COPY rootfs /app
 
