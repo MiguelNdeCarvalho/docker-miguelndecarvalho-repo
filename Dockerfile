@@ -3,7 +3,6 @@ FROM archlinux:base-devel-20210214.0.15477
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
 RUN pacman -Syu --noconfirm --needed \
-	base-devel \
 	git \
 	devtools \
 	cronie && \
