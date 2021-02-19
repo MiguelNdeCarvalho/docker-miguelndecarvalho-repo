@@ -2,6 +2,10 @@ FROM archlinux:base-20210214.0.15477
 
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
+RUN patched_glibc=glibc-linux4-2.33-4-x86_64.pkg.tar.zst && \
+    curl -LO "https://repo.archlinuxcn.org/x86_64/$patched_glibc" && \
+    bsdtar -C / -xvf "$patched_glibc"
+
 RUN echo "- install packages needed -" && \
     pacman -Syu --noconfirm \
     fakeroot \
