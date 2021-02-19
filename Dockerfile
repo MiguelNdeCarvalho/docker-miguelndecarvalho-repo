@@ -5,7 +5,8 @@ LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 RUN pacman -Syu --noconfirm --needed \
 	git \
 	devtools \
-	cronie && \
+	cronie \ 
+    wget && \
     mkdir /home/abc && \
     useradd -d /home/abc abc && \
     chown abc /home/abc && \
