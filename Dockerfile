@@ -7,6 +7,7 @@ RUN patched_glibc=glibc-linux4-2.33-4-x86_64.pkg.tar.zst && \
     bsdtar -C / -xvf "$patched_glibc"
 
 RUN echo "- install packages needed -" && \
+    echo "IgnorePkg   = glibc" >> /etc/pacman.conf && \
     pacman -Syu --noconfirm \
     fakeroot \
     binutils \
