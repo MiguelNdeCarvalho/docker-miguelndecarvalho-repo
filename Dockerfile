@@ -1,4 +1,4 @@
-FROM archlinux:base-20210214.0.15477
+FROM archlinux:base-devel-20210214.0.15477
 
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
