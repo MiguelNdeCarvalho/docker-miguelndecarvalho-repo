@@ -9,11 +9,7 @@ RUN patched_glibc=glibc-linux4-2.33-4-x86_64.pkg.tar.zst && \
 RUN echo "- install packages needed -" && \
     echo "IgnorePkg   = glibc" >> /etc/pacman.conf && \
     pacman -Syu --noconfirm \
-    fakeroot \
-    binutils \
-    sudo \
-    make \
-	git \
+    git \
 	cronie
 
 RUN echo "- create user -" && \
