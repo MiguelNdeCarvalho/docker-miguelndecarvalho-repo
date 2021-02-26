@@ -25,5 +25,3 @@ RUN echo "- cleanup -" && \
     pacman -Scc --noconfirm
 
 COPY rootfs /app
-
-CMD ["./app/start.sh"]
