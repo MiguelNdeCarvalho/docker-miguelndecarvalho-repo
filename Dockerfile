@@ -24,4 +24,4 @@ RUN echo "- install aurutils and privatebin" && \
 RUN echo "- cleanup -" && \
     pacman -Scc --noconfirm
 
-COPY rootfs /app
+COPY rootfs /
