@@ -2,12 +2,7 @@ FROM ghcr.io/miguelndecarvalho/docker-baseimage-archlinux:latest
 
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
-RUN patched_glibc=glibc-linux4-2.33-4-x86_64.pkg.tar.zst && \
-    curl -LO "https://repo.archlinuxcn.org/x86_64/$patched_glibc" && \
-    bsdtar -C / -xvf "$patched_glibc"
-
 RUN echo "- install packages needed -" && \
-    echo "IgnorePkg   = glibc" >> /etc/pacman.conf && \
     pacman -Syu --noconfirm \
     git \
 	cronie
