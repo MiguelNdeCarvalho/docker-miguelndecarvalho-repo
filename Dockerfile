@@ -1,4 +1,4 @@
-FROM archlinux:base-devel-20210214.0.15477
+FROM ghcr.io/miguelndecarvalho/docker-baseimage-archlinux:latest
 
 LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
