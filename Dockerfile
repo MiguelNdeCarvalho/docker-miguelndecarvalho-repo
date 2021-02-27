@@ -15,6 +15,7 @@ RUN echo "- install aurutils" && \
     s6-setuidgid abc cd /tmp/aurutils makepkg --noconfirm -sci
 
 RUN echo "- cleanup -" && \
-    pacman -Scc --noconfirm
+    pacman -Scc --noconfirm && \
+    rm -rf /tmp/*
 
 COPY rootfs /
