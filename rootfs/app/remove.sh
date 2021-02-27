@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "$1"];then
+if [ -z "$1" ];then
     echo -e "\e[31mYou forgot to pass the package name!\e[39m"
 else
     echo -e "\e[33mRemoving${1} from repo!\e[39m"
