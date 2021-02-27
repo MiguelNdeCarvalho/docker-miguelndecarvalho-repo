@@ -10,13 +10,9 @@ RUN echo "- install packages needed -" && \
 RUN echo "- add abc user to root list -" && \
     echo "abc ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN echo "- install aurutils and privatebin" && \
-    runuser -l abc -c 'git clone --depth 1 https://aur.archlinux.org/aurutils.git /home/abc/aurutils/' && \
-    runuser -l abc -c 'pacman-key --export DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A | gpg --import' && \
-    runuser -l abc -c 'cd /home/abc/aurutils/ && makepkg --noconfirm -sci && rm -rf /home/abc/aurutils/' && \
-    mkdir /app && \
-    curl -Lo /app/privatebin https://github.com/matthewpi/privatebin/releases/download/v0.0.1/privatebin && \
-    chmod +x /app/privatebin
+RUN echo "- install aurutils" && \
+    s6-setuidgid abc git clone --depth 1 https://aur.archlinux.org/aurutils.git /tmp/aurutils/ && \
+    s6-setuidgid abc cd /tmp/aurutils makepkg --noconfirm -sci
 
 RUN echo "- cleanup -" && \
     pacman -Scc --noconfirm
