@@ -7,6 +7,9 @@ RUN echo "- install packages needed -" && \
     git \
 	cronie
 
+RUN echo "- add abc user to root list -" && \
+    echo "abc ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
 RUN echo "- install aurutils and privatebin" && \
     runuser -l abc -c 'git clone --depth 1 https://aur.archlinux.org/aurutils.git /home/abc/aurutils/' && \
     runuser -l abc -c 'pacman-key --export DBE7D3DD8C81D58D0A13D0E76BC26A17B9B7018A | gpg --import' && \
