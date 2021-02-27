@@ -1,4 +1,4 @@
-name: Publish Docker Image
+name: Build Docker image
 
 on:  
   push:
@@ -11,7 +11,7 @@ on:
     - cron: "0 0 * * SUN"
 
 jobs:
-  path-context:
+  build-docker-image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
