@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+
+# Fix folder permissions
+chown -R abc:abc /app
+chown -R abc:abc /default
+chown -R abc:abc /config
