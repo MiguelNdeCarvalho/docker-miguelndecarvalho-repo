@@ -4,6 +4,10 @@ LABEL maintainer="MiguelNdeCarvalho <geral@miguelndecarvalho.pt>"
 
 RUN echo "- install packages needed -" && \
     pacman -Syu --noconfirm \
+    fakeroot \
+    sudo \
+    binutils \
+    make \
     git \
 	cronie
 
