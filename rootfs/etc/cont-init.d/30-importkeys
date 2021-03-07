@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+for key in $(echo "$KEYS" | tr "," " "); do
+		runuser -l abc -c "gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys $key &> /dev/null"
+done
