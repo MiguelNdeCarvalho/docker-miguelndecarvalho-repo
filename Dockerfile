@@ -9,6 +9,7 @@ RUN echo "- install packages needed -" && \
     binutils \
     make \
     gcc \
+    patch \
     git \
 	cronie
 
