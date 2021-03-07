@@ -22,6 +22,9 @@ else
     echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
 fi
 
+# Update the System
+pacman -Syu --noconfirm &> /dev/null
+
 # Create aliases
 if [ ! -f /usr/bin/update ];then
     echo -e '#!/bin/bash\nrunuser -l abc -c "/app/update.sh"' > /usr/bin/update
