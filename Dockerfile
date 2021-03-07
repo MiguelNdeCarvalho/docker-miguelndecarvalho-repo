@@ -8,6 +8,7 @@ RUN echo "- install packages needed -" && \
     sudo \
     binutils \
     make \
+    gcc \
     git \
 	cronie
 
