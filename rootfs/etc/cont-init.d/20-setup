@@ -33,4 +33,4 @@ if [ ! -f /usr/bin/rm ];then
 fi
 
 # Add Cronjob
-echo "${CRON} /app/update.sh > /app/logs/update" > /var/spool/cron/abc
+echo "${CRON} /app/update.sh >> /config/logs/update" > /var/spool/cron/abc
