@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+# Create log folder
+mkdir /config/logs/
+
+# Fix folder permissions
+chown -R abc:abc /app
+chown -R abc:abc /default
+chown -R abc:abc /config

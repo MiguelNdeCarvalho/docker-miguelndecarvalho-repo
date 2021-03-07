@@ -1,0 +1,50 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+REPO_PATH="/config/repo"
+
+send_notification ()
+{
+	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
+	-d parse_mode=HTML  \
+	-d chat_id="$TG_ID" \
+	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
+}
+
+package_exists ()
+{
+	for f in "$REPO_PATH/$1"*; do
+		if [ -e "$f" ];then 
+			return 0
+		else
+			return 1
+		fi
+		break
+	done
+}
+
+build ()
+{
+	echo -e "\e[34mAdding ${1} to the repo!\e[39m"
+	BUILD_START=$(date +%s)
+	runuser -l abc -c "aur sync --no-view --noconfirm \
+		-d ${REPO_NAME} \
+		-r ${REPO_PATH} \
+		${1} &> /dev/null"
+	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r ${REPO_PATH} ${1} &> /dev/null";then
+		echo -e "\e[31mSomething went wrong during the build of ${1}!\e[39m"
+		send_notification "Build failed for $1"
+	else
+		BUILD_END=$(date +%s)
+		DIFF=$((BUILD_END - BUILD_START))
+		echo -e "\e[32mSucessfully built ${1} in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds.\e[39m"
+	fi
+}
+
+for package in $(echo "$PACKAGES" | tr "," " "); do
+    if package_exists "$package";then
+        echo -e "\e[33m${package} is already on the repo!\e[39m"
+    else
+        build "$package"
+    fi
+done
