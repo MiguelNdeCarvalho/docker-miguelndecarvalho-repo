@@ -31,3 +31,6 @@ if [ ! -f /usr/bin/rm ];then
     echo -e '#!/bin/bash\nrunuser -l abc -c "/app/remove.sh $*"' > /usr/bin/rm
     chmod +x /usr/bin/rm
 fi
+
+# Add Cronjob
+echo "${CRON} /app/update.sh > /app/logs/update" > /var/spool/cron/abc
