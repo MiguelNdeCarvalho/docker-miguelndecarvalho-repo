@@ -2,7 +2,9 @@
 # shellcheck shell=bash
 
 # Create log folder
-mkdir /config/logs/
+if [ ! -d /config/logs ];then
+    mkdir /config/logs/
+fi
 
 # Fix folder permissions
 chown -R abc:abc /app
