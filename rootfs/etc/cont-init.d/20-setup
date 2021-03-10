@@ -26,10 +26,6 @@ fi
 pacman -Syu --noconfirm &> /dev/null
 
 # Create aliases
-if [ ! -f /usr/bin/update ];then
-    echo -e '#!/bin/bash\nrunuser -l abc -c "/app/update.sh"' > /usr/bin/update
-    chmod +x /usr/bin/update
-fi
 if [ ! -f /usr/bin/rm ];then
     echo -e '#!/bin/bash\nrunuser -l abc -c "/app/remove.sh $*"' > /usr/bin/rm
     chmod +x /usr/bin/rm
