@@ -44,6 +44,7 @@ build ()
 
 main ()
 {
+	HOME="/config"
 	print_time "Starting repo update process"
 	update_system
 	build
