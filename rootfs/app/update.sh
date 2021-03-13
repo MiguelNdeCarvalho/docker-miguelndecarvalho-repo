@@ -36,7 +36,7 @@ build ()
 	elif [ "$EXIT_CODE" == '123' ];then
 		return 123 
 	else
-		LOGS_URL=$(/app/privatebin < /tmp/update)
+		LOGS_URL=$(haste < /tmp/update)
 		send_notification "Something went wrong during the update of the repo!%0ALogs:$LOGS_URL"
 	fi
 	rm /tmp/update
