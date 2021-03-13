@@ -11,13 +11,13 @@ fi
 if [ -d $REPO_PATH ];then #Check if repo already exists
     chown abc:abc $REPO_PATH
     if [ ! -f "${REPO_PATH}/${REPO_NAME}".db.tar.xz ];then
-        runuser -l abc -c "repo-add ${REPO_PATH}/${REPO_NAME}.db.tar.xz"
+        runuser -l abc -c "repo-add ${REPO_PATH}/${REPO_NAME}.db.tar.xz &> /dev/null"
         echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
     fi
 else
     mkdir $REPO_PATH
     chown abc:abc $REPO_PATH
-    runuser -l abc -c "repo-add ${REPO_PATH}/${REPO_NAME}.db.tar.xz"
+    runuser -l abc -c "repo-add ${REPO_PATH}/${REPO_NAME}.db.tar.xz &> /dev/null"
     tar -xf /default/nginx.tar.gz -C $REPO_PATH
     echo -e "\e[32mSucessfully created the repo: ${REPO_NAME}\e[39m"
 fi
@@ -32,4 +32,4 @@ if [ ! -f /usr/bin/rm ];then
 fi
 
 # Add Cronjob
-echo "${CRON} /bin/bash /app/update.sh >> /config/logs/update" > /var/spool/cron/abc
+echo "${CRON} ./app/update.sh >> /config/logs/update" > /var/spool/cron/abc

@@ -39,6 +39,7 @@ build ()
 		LOGS_URL=$(/app/privatebin < /tmp/update)
 		send_notification "Something went wrong during the update of the repo!%0ALogs:$LOGS_URL"
 	fi
+	rm /tmp/update
 }
 
 main ()
