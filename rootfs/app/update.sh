@@ -36,7 +36,7 @@ build ()
 	elif [ "$EXIT_CODE" == '123' ];then
 		return 123 
 	else
-		LOGS_URL=$(haste < /tmp/update)
+		LOGS_URL=$(cat /tmp/update | haste)
 		send_notification "Something went wrong during the update of the repo!%0ALogs:$LOGS_URL"
 	fi
 	rm /tmp/update
