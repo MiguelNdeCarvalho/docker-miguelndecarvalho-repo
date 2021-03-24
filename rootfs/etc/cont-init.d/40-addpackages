@@ -3,12 +3,35 @@
 
 REPO_PATH="/config/repo"
 
-send_notification ()
+success_notification ()
 {
-	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
-	-d parse_mode=HTML  \
-	-d chat_id="$TG_ID" \
-	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
+
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":white_check_mark: The package has been added sucessfully to the repo.",
+	      "color": 7844437,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Package:",
+	          "value":"`'$1'`"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
 package_exists ()
