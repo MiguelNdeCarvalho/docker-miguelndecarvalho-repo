@@ -5,7 +5,6 @@ REPO_PATH="/config/repo"
 
 success_notification ()
 {
-
 	response='
 	{
 	  "embeds":[
@@ -31,6 +30,40 @@ success_notification ()
 	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
 	}'
 
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
+}
+
+fail_notification ()
+{
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":x: The package couldn`t be added to the repo.",
+	      "color": 14495300,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Package:",
+	          "value":"`'$1'`"
+	        },
+	        {
+	          "name":"Logs:",
+	          "value":"[Click here]('$2')"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
 	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
