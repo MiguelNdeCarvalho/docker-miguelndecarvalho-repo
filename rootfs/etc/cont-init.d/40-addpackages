@@ -22,6 +22,10 @@ success_notification ()
 	        {
 	          "name":"Package:",
 	          "value":"`'$1'`"
+	        },
+			{
+	          "name":"Build time:",
+	          "value":"'$2' minute(s) and '$3' seconds"
 	        }
 	      ]
 	    }
