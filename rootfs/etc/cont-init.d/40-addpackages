@@ -89,12 +89,12 @@ build ()
 	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r ${REPO_PATH} ${1} &> /tmp/add_package";then
 		unset BUILD_START
 		fail_notification "${1}" "$(cat /tmp/add_package | hastebin)"
-		rm /tmp/add_package
 	else
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
 		success_notification "${1}" "$((DIFF / 60))" "$((DIFF % 60))"
 	fi
+	rm /tmp/add_package
 }
 
 for package in $(echo "$PACKAGES" | tr "," " "); do
