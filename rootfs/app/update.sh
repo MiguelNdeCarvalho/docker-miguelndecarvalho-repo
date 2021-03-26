@@ -72,12 +72,6 @@ fail_notification ()
 	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
-update_system ()
-{
-	print_time "Performing a system update"
-	sudo pacman -Syu --noconfirm &> /dev/null
-}
-
 build ()
 {
 	BUILD_START=$(date +%s)
@@ -97,7 +91,7 @@ main ()
 {
 	HOME="/config"
 	print_time "Starting repo update process"
-	update_system
+	sudo pacman -Syu --noconfirm &> /dev/null #Update system
 	build
 	print_time "Finished repo update process"
 }
