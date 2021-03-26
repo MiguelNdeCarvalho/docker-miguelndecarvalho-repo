@@ -14,8 +14,8 @@ success_notification ()
 	{
 	  "embeds":[
 	    {
-	      "description":":x: The repo couldn`t be updated!",
-	      "color": 14495300,
+	      "description":":white_check_mark: The repo has been updated!",
+	      "color": 7844437,
 	      "footer":{
 	        "text":"Powered by MiguelNdeCarvalho"
 	      },
@@ -25,8 +25,12 @@ success_notification ()
 	      },
 	      "fields":[
 	        {
-	          "name":"Logs:",
-	          "value":"[Click here]('$1')"
+	          "name":"Changelog:",
+	          "value":"```'$PACKAGE_LIST'```"
+	        },
+			{
+	          "name":"Build time:",
+	          "value":"'$1' minute(s) and '$2' seconds"
 	        }
 	      ]
 	    }
@@ -44,7 +48,7 @@ fail_notification ()
 	{
 	  "embeds":[
 	    {
-	      "description":":x: The package couldn`t be added to the repo.",
+	      "description":":x: The repo couldn`t be update.",
 	      "color": 14495300,
 	      "footer":{
 	        "text":"Powered by MiguelNdeCarvalho"
@@ -55,12 +59,8 @@ fail_notification ()
 	      },
 	      "fields":[
 	        {
-	          "name":"Package:",
-	          "value":"`'$1'`"
-	        },
-	        {
 	          "name":"Logs:",
-	          "value":"[Click here]('$2')"
+	          "value":"[Click here]('$1')"
 	        }
 	      ]
 	    }
