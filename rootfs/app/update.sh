@@ -93,6 +93,7 @@ main ()
 	print_time "Starting repo update process"
 	sudo pacman -Syu --noconfirm &> /dev/null #Update system
 	build
+	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
 	print_time "Finished repo update process"
 }
 
