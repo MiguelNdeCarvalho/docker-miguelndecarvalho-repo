@@ -42,6 +42,30 @@ success_notification ()
 	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
+noupdates_notification ()
+{
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":warning: There are no updates available!",
+	      "color": 16312092,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      }
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
+}
+
 fail_notification ()
 {
 	response='
@@ -72,17 +96,22 @@ fail_notification ()
 	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
-build ()
+update ()
 {
 	BUILD_START=$(date +%s)
-	if ! aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update;then
-		unset BUILD_START
-		LOGS_URL=$(cat /tmp/update | hastebin)
-		fail_notification "$LOGS_URL"
-	else
+	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update
+	EXIT_CODE="$?"
+	if [ "$EXIT_CODE" == '0' ];then
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
 		success_notification "$((DIFF / 60))" "$((DIFF % 60))"
+	elif [ "$EXIT_CODE" == '123' ];then
+		unset BUILD_START
+		noupdates_notification
+	else
+		unset BUILD_START
+		LOGS_URL=$(cat /tmp/update | hastebin)
+		fail_notification "$LOGS_URL"
 	fi
 	rm /tmp/update
 }
@@ -92,7 +121,7 @@ main ()
 	HOME="/config"
 	print_time "Starting repo update process"
 	sudo pacman -Syu --noconfirm &> /dev/null #Update system
-	build
+	update
 	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
 	print_time "Finished repo update process"
 }
