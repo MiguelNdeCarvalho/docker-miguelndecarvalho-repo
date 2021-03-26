@@ -1,12 +1,7 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-REPO_PATH="/config/repo"
 
-print_time ()
-{
-	echo -e "\e[34m$(date "+%d/%m/%Y %H:%M:%S") - $1\e[39m"	
-}
 
 success_notification ()
 {
@@ -119,11 +114,10 @@ update ()
 main ()
 {
 	HOME="/config"
-	print_time "Starting repo update process"
+	REPO_PATH="/config/repo"
 	sudo pacman -Syu --noconfirm &> /dev/null #Update system
 	update
 	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
-	print_time "Finished repo update process"
 }
 
 main
