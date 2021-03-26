@@ -1,43 +1,112 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-print_time ()
+
+
+success_notification ()
 {
-	echo -e "\e[34m$(date "+%d/%m/%Y %H:%M:%S") - $1\e[39m"	
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":white_check_mark: The repo has been updated!",
+	      "color": 7844437,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Changelog:",
+	          "value":"```'$PACKAGE_LIST'```"
+	        },
+			{
+	          "name":"Build time:",
+	          "value":"'$1' minute(s) and '$2' seconds"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
-send_notification ()
+noupdates_notification ()
 {
-	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
-	-d parse_mode=HTML  \
-	-d chat_id="$TG_ID" \
-	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":warning: There are no updates available!",
+	      "color": 16312092,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      }
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
-update_system ()
+fail_notification ()
 {
-	print_time "Performing a system update"
-	sudo pacman -Syu --noconfirm &> /dev/null
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":x: The repo couldn`t be update.",
+	      "color": 14495300,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Logs:",
+	          "value":"[Click here]('$1')"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
-build ()
+update ()
 {
 	BUILD_START=$(date +%s)
-	aur sync --no-view --noconfirm \
-		-d "${REPO_NAME}" \
-		-r /repo \
-		-R -u &> /tmp/update
+	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update
 	EXIT_CODE="$?"
 	if [ "$EXIT_CODE" == '0' ];then
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
-		PACKAGES_UPDATED=$(grep "==> Adding package" /tmp/update | grep -Eo "'.*'" | sed "s/'//g" | sed "s/.pkg.tar.zst//g" | sed "s/-[0-9].*//g")
-		send_notification "Repo has been updated%0APackages Updated:$PACKAGES_UPDATED%0AIt took $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds."
+		success_notification "$((DIFF / 60))" "$((DIFF % 60))"
 	elif [ "$EXIT_CODE" == '123' ];then
-		return 123 
+		unset BUILD_START
+		noupdates_notification
 	else
+		unset BUILD_START
 		LOGS_URL=$(cat /tmp/update | hastebin)
-		send_notification "Something went wrong during the update of the repo!%0ALogs:$LOGS_URL"
+		fail_notification "$LOGS_URL"
 	fi
 	rm /tmp/update
 }
@@ -45,10 +114,10 @@ build ()
 main ()
 {
 	HOME="/config"
-	print_time "Starting repo update process"
-	update_system
-	build
-	print_time "Finished repo update process"
+	REPO_PATH="/config/repo"
+	sudo pacman -Syu --noconfirm &> /dev/null #Update system
+	update
+	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
 }
 
 main

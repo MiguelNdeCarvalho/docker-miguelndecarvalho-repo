@@ -3,12 +3,72 @@
 
 REPO_PATH="/config/repo"
 
-send_notification ()
+success_notification ()
 {
-	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
-	-d parse_mode=HTML  \
-	-d chat_id="$TG_ID" \
-	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":white_check_mark: The package has been added sucessfully to the repo.",
+	      "color": 7844437,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Package:",
+	          "value":"`'$1'`"
+	        },
+			{
+	          "name":"Build time:",
+	          "value":"'$2' minute(s) and '$3' seconds"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
+}
+
+fail_notification ()
+{
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":x: The package couldn`t be added to the repo.",
+	      "color": 14495300,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Package:",
+	          "value":"`'$1'`"
+	        },
+	        {
+	          "name":"Logs:",
+	          "value":"[Click here]('$2')"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
 package_exists ()
@@ -25,26 +85,20 @@ package_exists ()
 
 build ()
 {
-	echo -e "\e[34mAdding ${1} to the repo!\e[39m"
 	BUILD_START=$(date +%s)
-	runuser -l abc -c "aur sync --no-view --noconfirm \
-		-d ${REPO_NAME} \
-		-r ${REPO_PATH} \
-		${1} &> /dev/null"
-	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r ${REPO_PATH} ${1} &> /dev/null";then
-		echo -e "\e[31mSomething went wrong during the build of ${1}!\e[39m"
-		send_notification "Build failed for $1"
+	if ! runuser -l abc -c "aur sync --no-view --noconfirm -d ${REPO_NAME} -r ${REPO_PATH} ${1} &> /tmp/add_package";then
+		unset BUILD_START
+		fail_notification "${1}" "$(cat /tmp/add_package | hastebin)"
 	else
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
-		echo -e "\e[32mSucessfully built ${1} in $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds.\e[39m"
+		success_notification "${1}" "$((DIFF / 60))" "$((DIFF % 60))"
 	fi
+	rm /tmp/add_package
 }
 
 for package in $(echo "$PACKAGES" | tr "," " "); do
-    if package_exists "$package";then
-        echo -e "\e[33m${package} is already on the repo!\e[39m"
-    else
+    if ! package_exists "$package";then
         build "$package"
     fi
 done
