@@ -1,17 +1,75 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+REPO_PATH="/config/repo"
+
 print_time ()
 {
 	echo -e "\e[34m$(date "+%d/%m/%Y %H:%M:%S") - $1\e[39m"	
 }
 
-send_notification ()
+success_notification ()
 {
-	curl -s -X POST https://api.telegram.org/bot"$TG_TOKEN"/sendMessage \
-	-d parse_mode=HTML  \
-	-d chat_id="$TG_ID" \
-	-d text="<b>$REPO_NAME</b>%0A$1" &> /dev/null
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":x: The repo couldn`t be updated!",
+	      "color": 14495300,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Logs:",
+	          "value":"[Click here]('$1')"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
+}
+
+fail_notification ()
+{
+	response='
+	{
+	  "embeds":[
+	    {
+	      "description":":x: The package couldn`t be added to the repo.",
+	      "color": 14495300,
+	      "footer":{
+	        "text":"Powered by MiguelNdeCarvalho"
+	      },
+	      "author":{
+	        "name":"'$REPO_NAME' bot",
+	        "icon_url":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png"
+	      },
+	      "fields":[
+	        {
+	          "name":"Package:",
+	          "value":"`'$1'`"
+	        },
+	        {
+	          "name":"Logs:",
+	          "value":"[Click here]('$2')"
+	        }
+	      ]
+	    }
+	  ],
+	  "username":"'$REPO_NAME' bot",
+	  "avatar_url":"https://img.icons8.com/ultraviolet/240/000000/bot.png"
+	}'
+	
+	curl -fsSL -H "Content-Type: application/json" -d "${response}" "${DISCORD_WEBHOOK}"
 }
 
 update_system ()
@@ -23,21 +81,14 @@ update_system ()
 build ()
 {
 	BUILD_START=$(date +%s)
-	aur sync --no-view --noconfirm \
-		-d "${REPO_NAME}" \
-		-r /repo \
-		-R -u &> /tmp/update
-	EXIT_CODE="$?"
-	if [ "$EXIT_CODE" == '0' ];then
+	if ! aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update;then
+		unset BUILD_START
+		LOGS_URL=$(cat /tmp/update | hastebin)
+		fail_notification "$LOGS_URL"
+	else
 		BUILD_END=$(date +%s)
 		DIFF=$((BUILD_END - BUILD_START))
-		PACKAGES_UPDATED=$(grep "==> Adding package" /tmp/update | grep -Eo "'.*'" | sed "s/'//g" | sed "s/.pkg.tar.zst//g" | sed "s/-[0-9].*//g")
-		send_notification "Repo has been updated%0APackages Updated:$PACKAGES_UPDATED%0AIt took $((DIFF / 60)) minute(s) and $((DIFF % 60)) seconds."
-	elif [ "$EXIT_CODE" == '123' ];then
-		return 123 
-	else
-		LOGS_URL=$(cat /tmp/update | hastebin)
-		send_notification "Something went wrong during the update of the repo!%0ALogs:$LOGS_URL"
+		success_notification "$((DIFF / 60))" "$((DIFF % 60))"
 	fi
 	rm /tmp/update
 }
