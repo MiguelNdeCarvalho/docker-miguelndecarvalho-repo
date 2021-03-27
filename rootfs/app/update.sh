@@ -5,6 +5,13 @@
 
 success_notification ()
 {
+	mapfile -t lines < <(grep -n "==>" "${LOGS}" | head -n 2 | cut -d: -f1) # Grep Lines
+	PACKAGES=$(sed -n "$((lines[0]+1)),$((lines[1]-1))p" "${LOGS}" | sed 's/^ *//') # Grep between those lines
+
+	while IFS= read -r line; do
+		PACKAGE_LIST+="$line\n"
+	done <<< "$PACKAGES"
+
 	response='
 	{
 	  "embeds":[
