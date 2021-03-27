@@ -94,7 +94,7 @@ fail_notification ()
 update ()
 {
 	BUILD_START=$(date +%s)
-	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update
+	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> "$LOGS"
 	EXIT_CODE="$?"
 	if [ "$EXIT_CODE" == '0' ];then
 		BUILD_END=$(date +%s)
@@ -105,16 +105,17 @@ update ()
 		noupdates_notification
 	else
 		unset BUILD_START
-		LOGS_URL=$(cat /tmp/update | hastebin)
+		LOGS_URL=$(cat "$LOGS" | hastebin)
 		fail_notification "$LOGS_URL"
 	fi
-	rm /tmp/update
+	rm "$LOGS"
 }
 
 main ()
 {
 	HOME="/config"
 	REPO_PATH="/config/repo"
+	LOGS="/tmp/update"
 	sudo pacman -Syu --noconfirm &> /dev/null #Update system
 	update
 	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
