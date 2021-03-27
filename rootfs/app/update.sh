@@ -5,6 +5,13 @@
 
 success_notification ()
 {
+	mapfile -t lines < <(grep -n "==>" "${LOGS}" | head -n 2 | cut -d: -f1) # Grep Lines
+	PACKAGES=$(sed -n "$((lines[0]+1)),$((lines[1]-1))p" "${LOGS}" | sed 's/^ *//') # Grep between those lines
+
+	while IFS= read -r line; do
+		PACKAGE_LIST+="$line\n"
+	done <<< "$PACKAGES"
+
 	response='
 	{
 	  "embeds":[
@@ -94,7 +101,7 @@ fail_notification ()
 update ()
 {
 	BUILD_START=$(date +%s)
-	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> /tmp/update
+	aur sync --no-view --noconfirm -d "${REPO_NAME}" -r "${REPO_PATH}" -R -u &> "$LOGS"
 	EXIT_CODE="$?"
 	if [ "$EXIT_CODE" == '0' ];then
 		BUILD_END=$(date +%s)
@@ -105,16 +112,17 @@ update ()
 		noupdates_notification
 	else
 		unset BUILD_START
-		LOGS_URL=$(cat /tmp/update | hastebin)
+		LOGS_URL=$(cat "$LOGS" | hastebin)
 		fail_notification "$LOGS_URL"
 	fi
-	rm /tmp/update
+	rm "$LOGS"
 }
 
 main ()
 {
 	HOME="/config"
 	REPO_PATH="/config/repo"
+	LOGS="/tmp/update"
 	sudo pacman -Syu --noconfirm &> /dev/null #Update system
 	update
 	sudo pacman -Scc --noconfirm &> /dev/null #Clean cache
