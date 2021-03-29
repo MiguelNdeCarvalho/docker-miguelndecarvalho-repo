@@ -73,7 +73,7 @@ fail_notification ()
 
 package_exists ()
 {
-	for f in "$REPO_PATH/$1"*; do
+	for f in "$REPO_PATH/$1-"*; do
 		if [ -e "$f" ];then 
 			return 0
 		else
