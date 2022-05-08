@@ -23,3 +23,5 @@ RUN echo "- cleanup -" && \
     rm -rf /tmp/*
 
 COPY rootfs /
+
+EXPOSE 8080
