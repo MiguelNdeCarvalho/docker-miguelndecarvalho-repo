@@ -6,7 +6,8 @@ RUN echo "- install packages needed -" && \
     pacman -Syu --noconfirm \
     base-devel \
     git \
-	cronie
+	cronie \
+    nginx
 
 RUN echo "- add abc user to root list -" && \
     echo "abc ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
