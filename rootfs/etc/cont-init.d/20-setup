@@ -31,3 +31,6 @@ fi
 
 # Add Cronjob
 echo "${CRON} /app/update.sh >/dev/null 2>&1" > /var/spool/cron/abc
+
+# Copy nginx config file
+cp /default/nginx/nginx.conf /etc/nginx/nginx.conf
