@@ -38,6 +38,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          push: true
           tags: |
             miguelndecarvalho/docker-miguelndecarvalho-repo:latest
             ghcr.io/miguelndecarvalho/docker-miguelndecarvalho-repo:latest
