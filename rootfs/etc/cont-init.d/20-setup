@@ -17,7 +17,7 @@ else
     mkdir $REPO_PATH
     chown abc:abc $REPO_PATH
     runuser -l abc -c "repo-add ${REPO_PATH}/${REPO_NAME}.db.tar.xz &> /dev/null"
-    tar -xf /default/nginx.tar.gz -C $REPO_PATH
+    tar -xf /default/nginx/nginx.tar.gz -C $REPO_PATH
 fi
 
 # Update the System
